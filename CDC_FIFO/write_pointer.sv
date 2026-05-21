@@ -27,7 +27,7 @@ assign write_pointer_binary_next = write_pointer_binary + (write_enable & ~write
 // Writing
 always_ff @(posedge write_clk or negedge arst_ni) begin
     if (!arst_ni) begin
-        write_pointer_binary <= 4'b0000;
+        write_pointer_binary <= '0;
     end else begin
         write_pointer_binary <= write_pointer_binary_next;
     end
@@ -41,7 +41,7 @@ assign full_flag_after_compare = (write_pointer_binary_next [ADDR_WIDTH] != read
 
 always_ff @(posedge write_clk or negedge arst_ni) begin
     if (!arst_ni) begin
-        write_full_flag <= 0;
+        write_full_flag <= '0;
     end else begin
         write_full_flag <= full_flag_after_compare;
     end
@@ -50,14 +50,14 @@ end
 //Instantiating modules
 
 bin_to_gray #(
-    parameter N = 4
+    .N(ADDR_WIDTH + 1)
 ) bin_to_gray_inst (
     .binary_in(write_pointer_binary),
     .gray_out(outgoing_pointer_write_grey_sync)
 ); 
 
 gray_to_bin #(
-    parameter N = 4
+    .N(ADDR_WIDTH + 1)
 ) gray_to_bin_inst (
     .gray_in(incoming_pointer_read_grey_sync),
     .binary_out(read_pointer_binary_sync)
