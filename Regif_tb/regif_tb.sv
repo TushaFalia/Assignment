@@ -92,7 +92,7 @@ begin
     @(posedge clk_i);
     we_i <= 1'b0;
 
-    #1;
+    //#1;
 
     $display("[%0t] WRITE addr=%h data=%h error=%b",
              $time, addr, data, error_o);
@@ -112,14 +112,14 @@ begin
     we_i   <= 1'b0;
     re_i   <= 1'b1;
 
-    #1;
+    //#1; 
 
+    @(posedge clk_i);
     data = rdata_o;
 
     $display("[%0t] READ addr=%h data=%h error=%b",
              $time, addr, data, error_o);
 
-    @(posedge clk_i);
     re_i <= 1'b0;
 
 end
@@ -129,6 +129,9 @@ endtask
 
 initial begin
 
+
+    $dumpfile("regif_tb.vcd");
+    $dumpvars(0, regif_tb);
     //------------------------------------
     // Initialize
     //------------------------------------
@@ -166,17 +169,18 @@ initial begin
     //------------------------------------
     // STATUS register
     //------------------------------------
-    read_reg(5'h08, rd_data);
+    read_reg(5'h04, rd_data);
 
     //------------------------------------
     // RX DATA register
     //------------------------------------
-    read_reg(5'h10, rd_data);
+    read_reg(5'h00, rd_data);
 
     //------------------------------------
     // TX DATA register
     //------------------------------------
     write_reg(5'h0C, 32'h00000055);
+    read_reg(5'h0C, rd_data);
 
     //------------------------------------
     // Error test:
