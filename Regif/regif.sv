@@ -32,6 +32,7 @@ module regif (
     output logic       reg_rx_data_ready
 );
 
+// purpose of this register?? 
   import uart_pkg::UART_CTRL_OFFSET;
   import uart_pkg::UART_CFG_OFFSET;
   import uart_pkg::UART_STAT_OFFSET;
@@ -76,16 +77,18 @@ module regif (
       UART_RX_DATA_OFFSET: begin
         reg_rx_data_ready = re_i;
         rdata_o = {'0, reg_rx_data};
-        rd_error = ~reg_rx_data_valid & re_i;
+        rd_error = ~reg_rx_data_valid & re_i; // why ~reg_rx_data_valid? Ans: if reg_rx_data_valid from
+        // rx module is not valid, then read error occurs when re_i is high. 
       end
 
     endcase
   end
+        // Why build the data packet as reg_map for read operation not write operation?
 
   always_comb begin
     reg_tx_data       = wdata_i[7:0];
     reg_tx_data_valid = '0;
-    wr_error          = 1'b1;
+    wr_error          = 1'b1; //why wr_error = 1'b1?  
 
     case (addr_i)
 
@@ -103,7 +106,8 @@ module regif (
 
       UART_TX_DATA_OFFSET: begin
         reg_tx_data_valid = we_i;
-        wr_error = ~reg_tx_data_ready & we_i;
+        wr_error = ~reg_tx_data_ready & we_i; // why ~reg_tx_data_ready? Ans: if reg_tx_data_ready 
+        //from tx module is not ready, then write error occurs when we_i is high.
       end
 
     endcase
@@ -122,6 +126,8 @@ module regif (
     end else if (~wr_error & we_i) begin
       case (addr_i)
 
+      // why making data packet only for the specific address? Shouldn't the packet should be one 
+      //bit stream packet for all the address? 
         UART_CTRL_OFFSET: begin
           {reg_rx_flush, reg_tx_flush, reg_uart_en} = wdata_i[2:0];
         end
@@ -131,7 +137,7 @@ module regif (
         end
 
         UART_STAT_OFFSET: begin
-          {reg_rx_count, reg_tx_count} = wdata_i[19:0];
+          {reg_rx_count, reg_tx_count} = wdata_i[19:0]; // is writing on the input possible?
         end
 
       endcase
