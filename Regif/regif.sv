@@ -4,7 +4,7 @@ module regif (
     input logic arst_ni,
     input logic clk_i,
 
-    input  logic [ 2:0] addr_i,
+    input  logic [31:0] addr_i,
     input  logic [31:0] wdata_i,
     input  logic        we_i,
     input  logic        re_i,
