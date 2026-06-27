@@ -13,7 +13,7 @@ endif
 
 XVLOG_CMD += -sv
 XVLOG_CMD += -i $(ROOT_DIR)/include
-XVLOG_CMD += $(shell find $(ROOT_DIR)/APB-UART-TOP -name "*.sv")
+XVLOG_CMD += $(shell find $(ROOT_DIR)/ -name "*.sv")
 #XVLOG_CMD += $(shell find $(ROOT_DIR)/APB-UART-TOP -name "*.sv")
 
 $(BUILD_DIR) $(LOG_DIR):
